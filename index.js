@@ -2,14 +2,11 @@ const express = require("express");
 const axios = require("axios");
 const app = express();
 const port = 3000;
+const config = require("./config");
 
 app.use(express.json());
-const API_BASE_URL = "https://api.sws.speechify.com";
-const API_KEY = "A6Cv6bKJ9nsjfMP13ocDREXzL1F7OONRqCfTy3SECJ4=";
 
-let audioBase64 = null;
-
-app.post("/text", async (req, res) => {
+app.post("/api", async (req, res) => {
 	try {
 		const text = req.body.text;
 		if (!text) {
@@ -18,7 +15,7 @@ app.post("/text", async (req, res) => {
 
 		// Replace with your actual Speechify API endpoint and key
 		const speechifyResponse = await axios.post(
-			`${API_BASE_URL}/v1/audio/speech`,
+			`${config.api_base_url}/v1/audio/speech`,
 			{
 				audio_format: "mp3",
 				input: text,
@@ -28,18 +25,25 @@ app.post("/text", async (req, res) => {
 			},
 			{
 				headers: {
-					Authorization: `Bearer ${API_KEY}`,
+					Authorization: `Bearer ${config.api_key}`,
 				},
 			}
 		);
-		const audioBase64 = speechifyResponse.data.audio_data
-		console.log(audioBase64);
-		res.setHeader("Content-Type", "audio/mp3"); 
+		const audioBase64 = speechifyResponse.data.audio_data;
+		res.setHeader("Content-Type", "audio/mpeg");
+		res.setHeader(
+			"Content-Disposition",
+			'attachment; filename="audio.mp3"'
+		);
 		res.send(audioBase64);
 	} catch (error) {
 		console.error("Error processing text:", error);
 		res.status(500).json({ error: "Failed to process text" });
 	}
+});
+
+app.get("/health", (_req, res) => {
+	res.send("Server is working");
 });
 
 app.listen(port, () => {
