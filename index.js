@@ -1,7 +1,6 @@
 const express = require("express");
 const axios = require("axios");
 const app = express();
-const port = 3000;
 const config = require("./config");
 
 app.use(express.json());
@@ -46,6 +45,6 @@ app.get("/health", (_req, res) => {
 	res.send("Server is working");
 });
 
-app.listen(port, () => {
-	console.log(`Server listening on port ${port}`);
+app.listen(config.port, () => {
+	console.log(`Server listening on port ${config.port}`);
 });
