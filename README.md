@@ -156,9 +156,3 @@ The server will start on the port specified in the `.env` file (default: 3000).
 Access the API at `http://localhost:3000/api`.
 
 ---
-
-## **License**
-
-This project is licensed under the MIT License.
-
-Let me know if you need further assistance!
